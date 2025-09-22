@@ -1,0 +1,147 @@
+#root {
+  width: 100%;
+  margin-top: 10px;
+  padding-top: 0.5rem;
+  text-align: center;
+}
+
+.card {
+  padding: 2em;
+}
+
+.custom-navbar {
+  background-color: black !important;
+  width: 100%; /* full width */
+  margin: 0;
+  padding: 0;
+}
+
+/* Background for the whole app */
+.app-container {
+  background-color: #686868; /* charcoal */
+  min-height: 100vh;
+  color: #ffffff;
+  padding: 2rem; /* space around content */
+  display: flex;
+  justify-content: center; /* center content horizontally */
+  align-items: flex-start; /* start content near top */
+}
+
+.custom-navbar .navbar-brand,
+.custom-navbar .nav-link {
+  color: rgb(254, 189, 199) !important;
+}
+
+.custom-navbar .nav-link:hover {
+  color: hotpink !important; /* hover effect */
+}
+
+.content-wrapper {
+  max-width: 1280px; /* same as navbar max width */
+  width: 100%;
+  text-align: center;
+}
+
+/* Ensure body doesn't override */
+body {
+  margin: 10px;
+  padding: 0;
+}
+
+/* Cards on dark background */
+.card {
+  background-color: #444444;
+  color: #ffffff;
+  border: 1px solid #555555;
+  margin-top: 30px;
+}
+
+/* Containers transparent so the background shows */
+container,
+.container-fluid {
+  padding-left: 0;
+  padding-right: 0;
+  background-color: transparent;
+  padding-top: 4px;
+}
+
+.btn-product0,
+.btn-product1,
+.btn-product2 {
+  background-color: black;
+  color: rgb(254, 189, 199);
+  border: 1px solid rgb(254, 189, 199);
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  text-decoration: none;
+  border-radius: 8px;
+}
+
+.btn-product0:hover {
+  background-color: hotpink;
+  color: black;
+}
+
+.btn-product1:hover {
+  background-color: rgb(211, 3, 107);
+  color: black;
+}
+
+.btn-product2:hover {
+  background-color: rgb(247, 9, 9);
+  color: black;
+}
+
+input.input-small.form-control,
+textarea.input-small.form-control {
+  max-width: 400px; /* limit width */
+  width: 100%; /* responsive */
+  margin: 0 auto 1rem; /* center and add space below each field */
+  border: 2px solid rgb(254, 189, 199); /* light pink border */
+  border-radius: 8px; /* rounded corners */
+  padding: 0.5rem 0.75rem; /* internal spacing */
+  box-sizing: border-box;
+}
+
+.input-small:focus {
+  outline: none;
+  border-color: hotpink; /* change border on focus */
+  box-shadow: 0 0 5px hotpink;
+}
+
+.form-border {
+  border: 2px solid rgb(254, 189, 199); /* pink border */
+  border-radius: 12px; /* rounded corners */
+  padding: 2rem; /* spacing inside the border */
+  width: 600px;
+  margin: auto;
+}
+
+.mt-custom {
+  margin-top: 40px; /* adjust as needed */
+}
+
+/* Remove default icon */
+.custom-toggler .navbar-toggler-icon {
+  background-image: none; /* remove the default svg */
+  position: relative;
+  width: 30px;
+  height: 22px;
+}
+
+/* Create three pink bars */
+.custom-toggler .navbar-toggler-icon span {
+  display: block;
+  height: 3px;
+  background-color: rgb(254, 189, 199); /* light pink */
+  margin: 4px 0;
+  border-radius: 2px;
+  transition: all 0.3s;
+}
+
+/* Optional: change color on hover */
+.custom-toggler:hover .navbar-toggler-icon span {
+  background-color: hotpink;
+}
