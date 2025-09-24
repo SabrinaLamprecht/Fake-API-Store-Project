@@ -5,18 +5,17 @@ import axios from "axios";
 import { useState } from "react";
 import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
-import Alert from "react-bootstrap/Alert";
 import SuccessMessage from "./SuccessMessage";
+import ErrorMessage from "./ErrorMessage";
 
+// AddProduct Component - renders a form to create a new product
 function AddProduct() {
-  // State for storing the created product after submission
+  // State varibles for storing the created product after submission, tracking submission status, and error handling
   const [product, setProduct] = useState();
-  // State for tracking if the form was successfully submitted
   const [submitted, setSubmitted] = useState(false);
-  // State for error messages (if submission fails)
   const [error, setError] = useState(null);
-  // State for form input values
+
+  // Component state - tracks form data for the new product
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -25,13 +24,12 @@ function AddProduct() {
     image: "",
   });
 
-  // --- Handle input changes ---
-  // Updates the formData state whenever a form field is changed
+  // Handle input changes - updates the formData state whenever the user types in a field
   const handleChange = (e) => {
     // Get field name & value
     const { name, value } = e.target;
     setFormData({
-      // Spread previous state
+      // Keep previous values
       ...formData,
       // Update the changed field
       [name]: value,
@@ -40,6 +38,7 @@ function AddProduct() {
 
   // --- Handle form submission ---
   const handleSubmit = async (e) => {
+    // Prevent default form behavior (i.e. prevent page reload)
     e.preventDefault();
 
     try {
@@ -50,14 +49,14 @@ function AddProduct() {
       );
       // Log API response for debugging
       console.log(response.data);
-      // Store the created product
+      // Store the created product in state
       setProduct(response.data);
-      // Mark as submitted
+      // Mark form as successfully submitted
       setSubmitted(true);
-      // Clear any errors
+      // Clear any previous error messages
       setError(null);
     } catch (error) {
-      // Handle errors and display message
+      // Handle errors during submission and display message
       console.log(error);
       setError("Error submitting form. Please try again: ${error.message}");
       setSubmitted(false);
@@ -69,7 +68,7 @@ function AddProduct() {
       <Container className="form-container">
         <h2>Add Product</h2>
 
-        {/* Success message */}
+        {/* Success message component */}
         {submitted && (
           <SuccessMessage
             message={`${product.title} created successfully!`}
@@ -77,14 +76,12 @@ function AddProduct() {
           />
         )}
 
-        {/* Error message */}
+        {/* Error message component */}
         {error && (
-          <Alert variant="danger" dismissible>
-            {error}
-          </Alert>
+          <ErrorMessage message={error} onClose={() => setError(null)} />
         )}
 
-        {/* Form for adding new products */}
+        {/* Product form for adding new products */}
         <Form onSubmit={handleSubmit} className="form-border">
           {/* Title input */}
           <Form.Group className="mb-3">

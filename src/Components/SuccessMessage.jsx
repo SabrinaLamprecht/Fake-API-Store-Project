@@ -3,6 +3,7 @@
 // Imports
 import Alert from "react-bootstrap/Alert";
 
+// Component for displaying success messages in a dismissible alert bubble
 function SuccessMessage({ message, onClose }) {
   return (
     <Alert

@@ -11,11 +11,11 @@ import ErrorMessage from "./ErrorMessage";
 
 // Component for editing an existing product
 function EditProduct() {
-  // Extract product ID from the URL
+  // Extract product ID from the route (i.e. /products/:id/edit)
   const { id } = useParams();
   const navigate = useNavigate();
 
-  // Component state
+  // Component state - the product data is pre-filled into the form
   const [product, setProduct] = useState({
     title: "",
     price: "",
@@ -23,16 +23,16 @@ function EditProduct() {
     category: "",
     image: "",
   });
-  // Tracks loading state while fetching product
+
+  // State varibles for loading status, success message, and error handling
   const [loading, setLoading] = useState(true);
-  // Tracks success message after updating
   const [success, setSuccess] = useState(false);
-  // State for handling errors
   const [error, setError] = useState(null);
 
-  // Fetch product details when component mounts or when "id" changes
+  // Fetch product details when the component mounts or when "id" changes
   useEffect(() => {
     axios
+      // Make GET request to Fake Store API
       .get(`https://fakestoreapi.com/products/${id}`)
       .then((response) => {
         // Pre-fill form with existing product data
@@ -41,43 +41,52 @@ function EditProduct() {
         setLoading(false);
       })
       .catch((error) => {
+        // Log error for debugging
         console.error(error);
+        // Stop showing loading state
         setLoading(false);
       });
+    // id in the dependency array means this will run again whenever the id in the URL changes
   }, [id]);
 
-  // Handle input field changes (updates product state dynamically)
+  // Handle input field changes (updates product state dynamically as the user types)
   const handleChange = (e) => {
     setProduct({ ...product, [e.target.name]: e.target.value });
   };
 
   // Handle form submission to update product
   const handleSubmit = async (e) => {
-    // Prevent default form behavior
+    // Prevent default form behavior (i.e. prevent page reload)
     e.preventDefault();
     try {
-      // API call to update product
+      // PUT request to update product
       await axios.put(`https://fakestoreapi.com/products/${id}`, product);
+      // Show success message
       setSuccess(true);
+      // Clear any previous error
       setError(null);
 
-      // Redirect after showing success
+      // Redirect to the product details after showing success message
       setTimeout(() => navigate(`/products/${id}`), 1500);
     } catch (err) {
       console.error(err);
+      // Show error message to user if action fails
       setError("Failed to update product. Please try again.");
+      // Hide success state if error occurs
       setSuccess(false);
     }
   };
 
+  // Show loading while fetching data
   if (loading) return <p>Loading product...</p>;
 
+  // Render product edit form
   return (
     <Container
       className="d-flex flex-column align-items-center justify-content-center mt-5"
       style={{ minHeight: "calc(100vh - 80px)", position: "relative" }}
     >
-      {/* --- Messages at the top --- */}
+      {/* --- Success/Error Messages Component--- */}
       <div
         style={{
           width: "100%",
@@ -99,13 +108,14 @@ function EditProduct() {
         )}
       </div>
 
-      {/* --- Form --- */}
+      {/* --- Form for editing product --- */}
       <div
         className="form-container"
         style={{ width: "100%", maxWidth: "600px" }}
       >
         <h2>Edit Product</h2>
         <Form onSubmit={handleSubmit} className="form-border">
+          {/* Title field */}
           <Form.Group className="mb-3">
             <Form.Label>Title</Form.Label>
             <Form.Control
@@ -117,7 +127,7 @@ function EditProduct() {
               className="input-small"
             />
           </Form.Group>
-
+          {/* Price field */}
           <Form.Group className="mb-3">
             <Form.Label>Price</Form.Label>
             <Form.Control
@@ -130,7 +140,7 @@ function EditProduct() {
               className="input-small"
             />
           </Form.Group>
-
+          {/* Description field */}
           <Form.Group className="mb-3">
             <Form.Label>Description</Form.Label>
             <Form.Control
@@ -143,7 +153,7 @@ function EditProduct() {
               className="input-small"
             />
           </Form.Group>
-
+          {/* Category field */}
           <Form.Group className="mb-3">
             <Form.Label>Category</Form.Label>
             <Form.Control
@@ -155,7 +165,7 @@ function EditProduct() {
               className="input-small"
             />
           </Form.Group>
-
+          {/* Image URL field */}
           <Form.Group className="mb-3">
             <Form.Label>Image URL</Form.Label>
             <Form.Control
@@ -167,7 +177,7 @@ function EditProduct() {
             />
           </Form.Group>
 
-          {/* --- Button --- */}
+          {/* --- Submit Button --- */}
           <button className="btn-product0" type="submit">
             Save Changes
           </button>

@@ -8,20 +8,20 @@ import Card from "react-bootstrap/Card";
 import Container from "react-bootstrap/Container";
 import SuccessMessage from "./SuccessMessage";
 import ErrorMessage from "./ErrorMessage";
+import LoadingError from "./LoadingError";
 
 // Component for displaying details about a single product
 function ProductDetails() {
-  // Extract product ID from the URL parameters
+  // Extract product ID from the route (i.e. /products/:id)
   const { id } = useParams();
   const navigate = useNavigate();
-  // State to hold fetched product data
+
+  // State varibles for product data, loading status, and error handling
   const [product, setProduct] = useState(null);
-  // State for loading status
   const [loading, setLoading] = useState(true);
-  // State for handling errors
   const [error, setError] = useState(null);
 
-  // Success/error messages for actions
+  // State variables for success/error messages for add to cart and delete buttons
   const [addedToCart, setAddedToCart] = useState(false);
   const [cartError, setCartError] = useState(null);
   const [deleted, setDeleted] = useState(false);
@@ -29,52 +29,50 @@ function ProductDetails() {
 
   // Fetch product details when the component mounts or when "id" changes
   useEffect(() => {
-    // Safety check in case no ID is provided
+    // Safety check: if no id, don’t fetch
     if (!id) return;
 
     axios
-      // Fetch product by ID
+      // Make GET request to Fake Store API
       .get(`https://fakestoreapi.com/products/${id}`)
       .then((response) => {
-        // Store product in state
+        // Save API data into state
         setProduct(response.data);
-        // Stop loading
+        // Stop showing loading state
         setLoading(false);
       })
       .catch((error) => {
+        // Log error for debugging
         console.error(error);
-        // Show error message if fetch fails
+        // Show error message to user if fetch fails
         setError("Failed to load product details.");
+        // Stop showing loading state
         setLoading(false);
       });
+    // id in the dependency array means this will run again whenever the id in the URL changes
   }, [id]);
 
-  // Show loading or error messages if needed
-  if (loading || error || !product) {
-    return (
-      <Container
-        className="d-flex flex-column align-items-center justify-content-center mt-5"
-        style={{ minHeight: "calc(100vh - 80px)", paddingBottom: "3rem" }}
-      >
-        {loading && <p>Loading product...</p>}
-        {error && (
-          <ErrorMessage message={error} onClose={() => setError(null)} />
-        )}
-        {!loading && !error && !product && <p>No product data available.</p>}
-      </Container>
-    );
+  {
+    /* --- Loading/Error Message Component - show user before rendering products --- */
+  }
+  if (loading || error) {
+    return <LoadingError loading={loading} error={error} />;
   }
 
   // Add to Cart button handler
   const handleAddToCart = () => {
     try {
+      // Show success message
       setAddedToCart(true);
+      // Clear previous errors
       setCartError(null);
 
       // Auto-hide success message after 3 seconds
       setTimeout(() => setAddedToCart(false), 3000);
     } catch (err) {
+      // Log error for debugging
       console.error(err);
+      // Show error message to user if action fails
       setCartError("Could not add product to cart.");
     }
   };
@@ -82,14 +80,19 @@ function ProductDetails() {
   // Delete Product button handler
   const handleDeleteProduct = async () => {
     try {
+      // Delete API call
       await axios.delete(`https://fakestoreapi.com/products/${id}`);
+      // Show success message
       setDeleted(true);
+      // Clear previous errors
       setDeleteError(null);
 
-      // Redirect to product list after 2 seconds
+      // Redirect back to product list after 2 seconds
       setTimeout(() => navigate("/products"), 2000);
     } catch (err) {
+      // Log error for debugging
       console.error(err);
+      // Show error message to user if action fails
       setDeleteError("Error deleting product. Please try again.");
     }
   };
@@ -100,7 +103,7 @@ function ProductDetails() {
       className="mt-5 d-flex flex-column align-items-center justify-content-center"
       style={{ minHeight: "calc(100vh - 80px)", paddingBottom: "3rem" }}
     >
-      {/* Success/Error Messages */}
+      {/* Success/Error Message Components */}
       <div
         style={{
           width: "100%",
@@ -161,12 +164,13 @@ function ProductDetails() {
             <strong>Price: </strong> ${product.price}
           </Card.Text>
 
-          {/* Action buttons */}
+          {/* Add to Cart button */}
           <div className="d-flex justify-content-center gap-2 mt-3">
             <button className="btn-product0" onClick={handleAddToCart}>
               Add to Cart
             </button>
 
+            {/* Edit Product button */}
             <button
               className="btn-product1"
               onClick={() => navigate(`/products/${id}/edit`)}
@@ -174,6 +178,7 @@ function ProductDetails() {
               Edit Product
             </button>
 
+            {/* Delete Product button */}
             <button className="btn-product2" onClick={handleDeleteProduct}>
               Delete Product
             </button>
